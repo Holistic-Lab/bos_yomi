@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combien vous coûte votre téléphone ?</title>
+<style>
+  :root{
+    --bleu-travail:#25476A;   /* bleu de travail */
+    --bleu-fonce:#16304A;
+    --papier:#FAF8F3;         /* papier de devis */
+    --encre:#22242A;
+    --gris-ligne:#C9C4B8;
+    --orange-hv:#E8630A;      /* orange haute-visibilité */
+    --vert-ok:#1F7A3D;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+    background:var(--papier);color:var(--encre);
+    line-height:1.45;font-variant-numeric:tabular-nums;
+  }
+  .page{max-width:640px;margin:0 auto;padding:20px 18px 60px}
+  header{border-bottom:3px solid var(--bleu-travail);padding-bottom:14px;margin-bottom:18px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--bleu-travail);font-weight:600}
+  h1{font-size:clamp(24px,6vw,34px);font-weight:800;line-height:1.12;color:var(--bleu-fonce);margin-top:6px}
+  h1 em{font-style:normal;color:var(--orange-hv)}
+  .sub{margin-top:8px;font-size:14.5px;color:#4A4E57}
+
+  .tabs{display:flex;gap:8px;margin:20px 0 16px}
+  .tab{
+    flex:1;padding:11px 8px;border:2px solid var(--bleu-travail);background:transparent;
+    color:var(--bleu-travail);font-weight:700;font-size:14.5px;cursor:pointer;border-radius:6px;
+  }
+  .tab[aria-selected="true"]{background:var(--bleu-travail);color:#fff}
+  .tab:focus-visible{outline:3px solid var(--orange-hv);outline-offset:2px}
+
+  .presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .preset{
+    padding:7px 12px;border:1.5px solid var(--gris-ligne);background:#fff;border-radius:999px;
+    font-size:13.5px;cursor:pointer;color:var(--encre);
+  }
+  .preset[aria-pressed="true"]{border-color:var(--orange-hv);color:var(--orange-hv);font-weight:700}
+  .preset:focus-visible{outline:3px solid var(--orange-hv);outline-offset:2px}
+
+  .champ{background:#fff;border:1.5px solid var(--gris-ligne);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+  .champ label{display:flex;justify-content:space-between;align-items:baseline;font-size:14.5px;font-weight:600;gap:10px}
+  .champ .valeur{font-size:18px;font-weight:800;color:var(--bleu-travail);white-space:nowrap}
+  input[type=range]{width:100%;margin-top:12px;accent-color:var(--bleu-travail);height:28px}
+  input[type=range]:focus-visible{outline:3px solid var(--orange-hv);outline-offset:2px}
+  .aide{font-size:12.5px;color:#6A6E77;margin-top:6px}
+
+  /* Le total, façon bas de devis */
+  .total{margin-top:22px;border-top:3px double var(--encre);padding-top:16px}
+  .ligne{display:flex;justify-content:space-between;font-size:14.5px;padding:5px 0;color:#3A3E46}
+  .ligne strong{font-weight:700;color:var(--encre)}
+  .grand-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:14px 0;border-top:1.5px solid var(--encre);border-bottom:1.5px solid var(--encre)}
+  .grand-total .lib{font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+  .grand-total .montant{font-size:clamp(28px,8vw,40px);font-weight:800;color:var(--orange-hv)}
+  .fourchette{font-size:13px;color:#6A6E77;text-align:right;margin-top:6px}
+
+  /* Le tampon verdict — signature */
+  .verdict{display:flex;justify-content:center;margin:26px 0 8px}
+  .tampon{
+    transform:rotate(-3deg);border:3px double var(--vert-ok);color:var(--vert-ok);
+    padding:10px 22px;border-radius:8px;text-align:center;background:rgba(31,122,61,.04);
+  }
+  .tampon.negatif{border-color:#9A3B3B;color:#9A3B3B;background:rgba(154,59,59,.04)}
+  .tampon .gros{font-size:clamp(20px,6vw,26px);font-weight:800;letter-spacing:.02em}
+  .tampon .petit{font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+
+  .phrase{margin-top:16px;text-align:center;font-size:15.5px;color:var(--encre)}
+  .phrase strong{color:var(--bleu-fonce)}
+
+  footer{margin-top:34px;border-top:1px solid var(--gris-ligne);padding-top:12px;font-size:12px;color:#7A7E87}
+  .mode{display:none}
+  .mode.actif{display:block}
+  @media (prefers-reduced-motion:no-preference){
+    .montant{transition:color .15s}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="eyebrow">Calcul fait avec vos chiffres — pas de statistiques toutes faites</div>
+    <h1>Combien vous coûte <em>votre téléphone</em> ?</h1>
+    <div class="sub">Réglez les curseurs avec vos vrais chiffres. Le calcul retient volontairement l'hypothèse basse.</div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tabA" role="tab" aria-selected="true" onclick="mode('A')">Je rate des appels</button>
+    <button class="tab" id="tabB" role="tab" aria-selected="false" onclick="mode('B')">Je suis débordé</button>
+  </div>
+
+  <!-- MODE A : appels manqués (demande) -->
+  <section class="mode actif" id="modeA">
+    <div class="presets" id="presetsA">
+      <button class="preset" data-p="plombier" aria-pressed="true" onclick="preset('plombier',this)">Plombier-chauffagiste</button>
+      <button class="preset" data-p="electricien" aria-pressed="false" onclick="preset('electricien',this)">Électricien</button>
+      <button class="preset" data-p="autoecole" aria-pressed="false" onclick="preset('autoecole',this)">Auto-école</button>
+      <button class="preset" data-p="autre" aria-pressed="false" onclick="preset('autre',this)">Autre métier</button>
+    </div>
+
+    <div class="champ">
+      <label>Appels ratés par semaine <span class="valeur" id="vAppels">10</span></label>
+      <input type="range" id="appels" min="1" max="40" value="10" oninput="calc()">
+      <div class="aide">Pendant les interventions, au volant, le midi, le soir…</div>
+    </div>
+
+    <div class="champ">
+      <label>Sur 10 appels ratés, combien sont de vrais clients ? <span class="valeur" id="vClients">5</span></label>
+      <input type="range" id="clients" min="1" max="10" value="5" oninput="calc()">
+      <div class="aide">Le reste : démarchage, fournisseurs, questions sans suite.</div>
+    </div>
+
+    <div class="champ">
+      <label>Valeur moyenne d'un client <span class="valeur" id="vTicket">300&nbsp;€</span></label>
+      <input type="range" id="ticket" min="50" max="5000" step="50" value="300" oninput="calc()">
+      <div class="aide" id="aideTicket">Dépannage courant. Une chaudière remplacée, c'est 3&nbsp;500 à 9&nbsp;000&nbsp;€.</div>
+    </div>
+
+    <div class="total">
+      <div class="ligne"><span>Clients potentiels ratés / mois</span><strong id="rClients">—</strong></div>
+      <div class="ligne"><span>Hypothèse retenue : l'agent n'en récupère que la moitié</span><strong>× 0,5</strong></div>
+      <div class="grand-total">
+        <span class="lib">Manque à gagner / mois</span>
+        <span class="montant" id="rPerte">—</span>
+      </div>
+      <div class="fourchette" id="rFourchette"></div>
+    </div>
+  </section>
+
+  <!-- MODE B : no-show / débordé (capacité) -->
+  <section class="mode" id="modeB">
+    <div class="champ">
+      <label>Rendez-vous par mois <span class="valeur" id="vRdv">90</span></label>
+      <input type="range" id="rdv" min="20" max="300" step="5" value="90" oninput="calc()">
+    </div>
+    <div class="champ">
+      <label>Lapins (rendez-vous non honorés) <span class="valeur" id="vNoshow">12&nbsp;%</span></label>
+      <input type="range" id="noshow" min="2" max="30" value="12" oninput="calc()">
+      <div class="aide">Un client qui ne vient pas = un créneau d'atelier perdu.</div>
+    </div>
+    <div class="champ">
+      <label>Valeur d'un créneau perdu <span class="valeur" id="vCreneau">100&nbsp;€</span></label>
+      <input type="range" id="creneau" min="40" max="400" step="10" value="100" oninput="calc()">
+    </div>
+    <div class="total">
+      <div class="ligne"><span>Créneaux perdus / mois aujourd'hui</span><strong id="rLapins">—</strong></div>
+      <div class="ligne"><span>Avec confirmation + rappel automatiques (objectif&nbsp;: 5&nbsp;%)</span><strong id="rApres">—</strong></div>
+      <div class="grand-total">
+        <span class="lib">Créneaux récupérables / mois</span>
+        <span class="montant" id="rGainB">—</span>
+      </div>
+      <div class="fourchette">Sans compter le tri des appels&nbsp;: les grosses réparations d'abord.</div>
+    </div>
+  </section>
+
+  <div class="verdict"><div class="tampon" id="tampon">
+    <div class="gros" id="tamponGros">—</div>
+    <div class="petit" id="tamponPetit">service à 300&nbsp;€ / mois</div>
+  </div></div>
+  <div class="phrase" id="phrase"></div>
+
+  <footer>
+    Hypothèses volontairement prudentes&nbsp;: seule la moitié des clients ratés est comptée récupérée.
+    Service&nbsp;: réponse 24h/24 aux appels que vous ne pouvez pas prendre — installation et réglages faits pour vous, suivi local.
+    Conforme à la réglementation européenne&nbsp;: l'appelant est informé qu'il parle à un assistant.
+  </footer>
+</div>
+
+<script>
+const PRESETS = {
+  plombier:    {appels:10, clients:5, ticket:300,  aide:"Dépannage courant. Une chaudière remplacée, c'est 3&nbsp;500 à 9&nbsp;000&nbsp;€."},
+  electricien: {appels:8,  clients:5, ticket:200,  aide:"Intervention courante. Un tableau ou une mise aux normes dépasse 1&nbsp;000&nbsp;€."},
+  autoecole:   {appels:6,  clients:4, ticket:1800, aide:"Un forfait permis B complet ≈ 1&nbsp;800&nbsp;€ (moyenne nationale)."},
+  autre:       {appels:8,  clients:5, ticket:250,  aide:"Mettez votre panier moyen réel."}
+};
+const PRIX = 300;
+const eur = n => n.toLocaleString("fr-FR") + " €";
+
+function mode(m){
+  document.getElementById("modeA").classList.toggle("actif", m==="A");
+  document.getElementById("modeB").classList.toggle("actif", m==="B");
+  document.getElementById("tabA").setAttribute("aria-selected", m==="A");
+  document.getElementById("tabB").setAttribute("aria-selected", m==="B");
+  calc();
+}
+function preset(p, btn){
+  document.querySelectorAll("#presetsA .preset").forEach(b=>b.setAttribute("aria-pressed","false"));
+  btn.setAttribute("aria-pressed","true");
+  const cfg = PRESETS[p];
+  document.getElementById("appels").value = cfg.appels;
+  document.getElementById("clients").value = cfg.clients;
+  document.getElementById("ticket").value = cfg.ticket;
+  document.getElementById("aideTicket").innerHTML = cfg.aide;
+  calc();
+}
+function calc(){
+  const modeA = document.getElementById("modeA").classList.contains("actif");
+  let gainPrudent, phrase;
+  if (modeA){
+    const a = +document.getElementById("appels").value;
+    const c = +document.getElementById("clients").value;
+    const t = +document.getElementById("ticket").value;
+    document.getElementById("vAppels").textContent = a;
+    document.getElementById("vClients").textContent = c;
+    document.getElementById("vTicket").textContent = eur(t);
+    const clientsMois = a * 4.3 * (c/10);
+    const plein = clientsMois * t;
+    gainPrudent = Math.round(plein * 0.5);
+    document.getElementById("rClients").textContent = clientsMois.toFixed(0);
+    document.getElementById("rPerte").textContent = eur(gainPrudent);
+    document.getElementById("rFourchette").textContent = "(jusqu'à " + eur(Math.round(plein)) + " si tout était récupéré)";
+    const n = Math.max(1, Math.ceil(PRIX / t));
+    phrase = "Il suffit de <strong>" + n + " client" + (n>1?"s":"") + " récupéré" + (n>1?"s":"") + " par mois</strong> pour que le service soit remboursé. Le reste, c'est du gain net.";
+  } else {
+    const r = +document.getElementById("rdv").value;
+    const ns = +document.getElementById("noshow").value;
+    const v = +document.getElementById("creneau").value;
+    document.getElementById("vRdv").textContent = r;
+    document.getElementById("vNoshow").textContent = ns + " %";
+    document.getElementById("vCreneau").textContent = eur(v);
+    const lapins = r * ns/100;
+    const apres = r * Math.min(ns,5)/100;
+    const recup = Math.max(0, lapins - apres);
+    gainPrudent = Math.round(recup * v);
+    document.getElementById("rLapins").textContent = lapins.toFixed(0) + " (" + eur(Math.round(lapins*v)) + ")";
+    document.getElementById("rApres").textContent = apres.toFixed(0);
+    document.getElementById("rGainB").textContent = recup.toFixed(0) + " → " + eur(gainPrudent);
+    phrase = "Et pendant ce temps, l'assistant filtre&nbsp;: <strong>les grosses réparations passent devant</strong>, les petites demandes attendent leur tour.";
+  }
+  const mult = gainPrudent / PRIX;
+  const tampon = document.getElementById("tampon");
+  const gros = document.getElementById("tamponGros");
+  if (mult >= 1){
+    tampon.classList.remove("negatif");
+    gros.textContent = "Remboursé × " + (mult >= 10 ? Math.round(mult) : mult.toFixed(1)).toString().replace(".", ",");
+  } else {
+    tampon.classList.add("negatif");
+    gros.textContent = "Pas rentable avec ces chiffres";
+  }
+  document.getElementById("phrase").innerHTML = phrase;
+}
+calc();
+</script>
+</body>
+</html>
