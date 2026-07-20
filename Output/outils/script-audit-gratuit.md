@@ -24,6 +24,12 @@
 - « Vous pouvez en sortir une liste — genre les clients avec leur date de dernier passage ? » *(→ SI OUI : « parfait, c'est tout ce qu'il me faut pour vous montrer un chiffre précis »)*
 - « Les numéros de portable de vos clients, vous les avez à peu près tous ? »
 
+### 3-bis. La base clients & la confidentialité — DEVANCER le sujet (1 min, juste après les questions techniques)
+Ne pas attendre l'objection. Dès qu'il confirme qu'un export est possible, enchaîner :
+« Un mot important, parce que c'est votre bien le plus précieux : **votre fichier reste à vous.** Je vous signe un engagement de confidentialité — je ne prends que le minimum (nom, portable, date de dernier passage, type de prestation — pas vos factures, pas vos prix), tout est hébergé en France, jamais mélangé avec un autre garage, jamais revendu, et tout est supprimé si on arrête. Chaque message part au nom de VOTRE garage, avec possibilité de se désinscrire. C'est encadré par le RGPD — moi je suis votre prestataire, le fichier reste le vôtre. »
+→ Sortir **l'engagement de confidentialité d'une page** (`engagement-confidentialite-donnees.md`, imprimé) : « Tenez, c'est ça que je signe. » **L'avoir prêt sur place = le signal de sérieux que aucun vendeur de logiciel ne donne.**
+Cadre légal (pour toi, pas à réciter) : toi = sous-traitant RGPD art. 28, lui = responsable de traitement ; relancer SES clients existants pour des services analogues est autorisé (relation client existante) avec identification de l'expéditeur + STOP ; le rappel de RDV est un message de service, la relance dormants est de la prospection → toujours le STOP.
+
 ### 4. La démo qui vend (5 min — le moment calculateur)
 Sortir le téléphone/tablette → **calculateur, onglet « Mes clients dorment »** :
 « On va faire le calcul avec VOS chiffres, pas des statistiques de vendeur. Vous avez combien de clients dans votre fichier, à la louche ? … Sur 10, combien ne sont pas revenus depuis plus d'un an ? … Un client qui revient, ça vous fait quel panier en moyenne ? »
@@ -48,6 +54,7 @@ Puis la phrase qui cadre le prix : « Mon service coûte 149 € par mois. *(bou
 | « C'est de l'IA votre truc ? » | « Il y en a dedans, oui — pour personnaliser les messages. Mais ce que je vous vends, c'est pas de la techno : c'est des clients qui reviennent, et un voisin qui s'en occupe. D'ailleurs, la loi m'oblige à ce que les messages soient clairs là-dessus, et c'est très bien. » |
 | « Combien ça coûte ? » (trop tôt) | « J'y viens — mais d'abord je veux savoir si ça VAUT le coup pour vous. Si votre fichier ne le justifie pas, je vous le dirai et je ne vous vendrai rien. » |
 | « Envoyez-moi une doc » | « Je fais mieux : je repasse [jour] avec le diagnostic de VOTRE fichier. Une doc générique ne vous dira rien. » |
+| « Je vais pas vous donner mon fichier clients ! » | « Et vous avez raison d'être prudent — c'est votre bien le plus précieux. C'est pour ça que je signe cet engagement *(le sortir)* : minimum de données, hébergé en France, jamais revendu, supprimé si on arrête, et chaque message part au nom de VOTRE garage. Moi je suis votre prestataire — le fichier reste le vôtre, toujours. » |
 
 ## Après la porte (1 min, dans la voiture)
 Tracker : nom · accueil (1-5) · douleur exprimée (dormants / lapins / appels / rien) · logiciel utilisé · export possible O/N · suite datée · verbatim marquant.
