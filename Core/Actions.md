@@ -1,6 +1,13 @@
 # Actions
 
-*Mis à jour le 2026-07-19 (session de nuit BOS — plan validé par Karim le 18/07 au soir : pari principal vocal repositionné ✅, test Kevin ✅, sprint B2C BP enterré ✅).*
+*Mis à jour le 2026-07-20 (Passe 2 rendue — fiches de décision dans `Output/passe2-fiches-decision-lancement-2026-07-20.md`).*
+
+## 🔴 DÉCISION EN ATTENTE DE KARIM — reco de lancement Passe 2
+**Produit d'ancrage = « Réactivation clients + rappels intelligents » (la mécanique gagnante, 30/35 à l'arbitrage économique), lancé sur les GARAGES d'abord (~260 indépendants en agglo), décliné plombiers-chauffagistes ensuite (entretien chaudière annuel).** Le vocal passe en produit premium phase 2. Boulangerie : NO-GO (Kazalendar à 9,99 €/mois + caisses installées). Véto/toiletteur : écartés en entrée (véto consolidé Sevetys/Vetloire/Santévet ; toiletteur ~20-25 salons, trop étroit).
+- Offre pilote révisée : **setup 290-490 € (JAMAIS offert — règle anti-churn MSP) + 129-149 €/mois sans engagement**, rapport mensuel chiffré + visite trimestrielle inclus.
+- Chemin : 25 clients ≈ 3,5 k€ MRR, plafond de capacité solo jamais atteint (maintenance 0,5 h/client/mois).
+- **Démo AutoClim 18/08 maintenue mais transformée** : « réactivation + anti-no-show sur SES clients » (le vocal en option premium).
+- Gate terrain : 20 audits gratuits → < 2 pilotes signés = re-diagnostic.
 
 ## ✅ Fait cette nuit par BOS (tout est dans Output/)
 - **Listes de prospection SIRENE 37 scorées** (`Output/prospection/`) : plombiers-chauffagistes (665 dont 315 solos en agglo), électriciens (677/364), auto-écoles (117/58), garages (695/279). Nominatif : dirigeant, adresse, commune, effectif, score.
