@@ -73,3 +73,4 @@ Sans design : churn attendu ~26-40 %/an (régime « service facilement coupé »
 - Comptages électriciens/garages plafonnés à 1000 résultats scannés (cap API) — ordres de grandeur légèrement sous-estimés, sans impact sur les verdicts.
 - Churn : benchmark TSIA (90 % rétention MSP) relayé, non consulté à la source primaire.
 - Part exacte des garages avec DMS exportable : à mesurer sur les 20 premiers audits.
+- Vétérinaires « solo probable » (37/45 agglo) : chiffre fragile — beaucoup d'inscriptions SIRENE individuelles de praticiens exerçant en réalité dans des cliniques employeuses (double comptage possible). Sans impact : le vertical est écarté, et cette fragilité va dans le sens de l'écartement (encore moins de cibles indépendantes réelles).
