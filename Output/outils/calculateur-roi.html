@@ -28,10 +28,10 @@
   h1 em{font-style:normal;color:var(--orange-hv)}
   .sub{margin-top:8px;font-size:14.5px;color:#4A4E57}
 
-  .tabs{display:flex;gap:8px;margin:20px 0 16px}
+  .tabs{display:flex;gap:6px;margin:20px 0 16px}
   .tab{
-    flex:1;padding:11px 8px;border:2px solid var(--bleu-travail);background:transparent;
-    color:var(--bleu-travail);font-weight:700;font-size:14.5px;cursor:pointer;border-radius:6px;
+    flex:1;padding:10px 6px;border:2px solid var(--bleu-travail);background:transparent;
+    color:var(--bleu-travail);font-weight:700;font-size:13.5px;cursor:pointer;border-radius:6px;
   }
   .tab[aria-selected="true"]{background:var(--bleu-travail);color:#fff}
   .tab:focus-visible{outline:3px solid var(--orange-hv);outline-offset:2px}
@@ -60,6 +60,11 @@
   .grand-total .montant{font-size:clamp(28px,8vw,40px);font-weight:800;color:var(--orange-hv)}
   .fourchette{font-size:13px;color:#6A6E77;text-align:right;margin-top:6px}
 
+  /* Prix du service */
+  .prix-service{background:#fff;border:2px solid var(--bleu-travail);border-radius:8px;padding:12px 16px;margin-top:20px}
+  .prix-service label{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;font-weight:700;color:var(--bleu-fonce);letter-spacing:.04em;text-transform:uppercase}
+  .prix-service .valeur{font-size:20px;font-weight:800;color:var(--bleu-travail)}
+
   /* Le tampon verdict — signature */
   .verdict{display:flex;justify-content:center;margin:26px 0 8px}
   .tampon{
@@ -85,17 +90,47 @@
 <div class="page">
   <header>
     <div class="eyebrow">Calcul fait avec vos chiffres — pas de statistiques toutes faites</div>
-    <h1>Combien vous coûte <em>votre téléphone</em> ?</h1>
+    <h1>Combien dorment <em>vos clients</em> ?</h1>
     <div class="sub">Réglez les curseurs avec vos vrais chiffres. Le calcul retient volontairement l'hypothèse basse.</div>
   </header>
 
   <div class="tabs" role="tablist">
-    <button class="tab" id="tabA" role="tab" aria-selected="true" onclick="mode('A')">Je rate des appels</button>
+    <button class="tab" id="tabC" role="tab" aria-selected="true" onclick="mode('C')">Mes clients dorment</button>
+    <button class="tab" id="tabA" role="tab" aria-selected="false" onclick="mode('A')">Je rate des appels</button>
     <button class="tab" id="tabB" role="tab" aria-selected="false" onclick="mode('B')">Je suis débordé</button>
   </div>
 
+  <!-- MODE C : base clients dormante (réactivation) — l'ancrage principal -->
+  <section class="mode actif" id="modeC">
+    <div class="champ">
+      <label>Clients dans votre fichier <span class="valeur" id="vBase">800</span></label>
+      <input type="range" id="base" min="100" max="3000" step="50" value="800" oninput="calc()">
+      <div class="aide">Votre logiciel de caisse/DMS, votre facturier — tous les clients déjà venus.</div>
+    </div>
+    <div class="champ">
+      <label>Sur 10 clients du fichier, combien ne sont pas revenus depuis plus d'un an ? <span class="valeur" id="vDormants">4</span></label>
+      <input type="range" id="dormants" min="1" max="8" value="4" oninput="calc()">
+      <div class="aide">Les « dormants » : partis chez le concurrent, ou juste… oubliés. Souvent 30-50 %.</div>
+    </div>
+    <div class="champ">
+      <label>Valeur moyenne d'un client qui revient <span class="valeur" id="vTicketC">300&nbsp;€</span></label>
+      <input type="range" id="ticketC" min="50" max="1500" step="25" value="300" oninput="calc()">
+      <div class="aide" id="aideTicketC">Révision ~350&nbsp;€, plaquettes ~440&nbsp;€, distribution ~730&nbsp;€ (baromètre 2025).</div>
+    </div>
+    <div class="total">
+      <div class="ligne"><span>Clients dormants dans votre fichier</span><strong id="rDormants">—</strong></div>
+      <div class="ligne"><span>Hypothèse prudente : 1 dormant sur 10 revient après rappel</span><strong>× 0,10</strong></div>
+      <div class="ligne"><span>Retours estimés sur l'année</span><strong id="rRetours">—</strong></div>
+      <div class="grand-total">
+        <span class="lib">CA récupérable / an</span>
+        <span class="montant" id="rGainC">—</span>
+      </div>
+      <div class="fourchette" id="rFourchetteC"></div>
+    </div>
+  </section>
+
   <!-- MODE A : appels manqués (demande) -->
-  <section class="mode actif" id="modeA">
+  <section class="mode" id="modeA">
     <div class="presets" id="presetsA">
       <button class="preset" data-p="plombier" aria-pressed="true" onclick="preset('plombier',this)">Plombier-chauffagiste</button>
       <button class="preset" data-p="electricien" aria-pressed="false" onclick="preset('electricien',this)">Électricien</button>
@@ -123,7 +158,7 @@
 
     <div class="total">
       <div class="ligne"><span>Clients potentiels ratés / mois</span><strong id="rClients">—</strong></div>
-      <div class="ligne"><span>Hypothèse retenue : l'agent n'en récupère que la moitié</span><strong>× 0,5</strong></div>
+      <div class="ligne"><span>Hypothèse retenue : le service n'en récupère que la moitié</span><strong>× 0,5</strong></div>
       <div class="grand-total">
         <span class="lib">Manque à gagner / mois</span>
         <span class="montant" id="rPerte">—</span>
@@ -158,16 +193,22 @@
     </div>
   </section>
 
+  <!-- Prix du service (réglable) -->
+  <div class="prix-service">
+    <label>Prix du service / mois <span class="valeur" id="vPrix">149&nbsp;€</span></label>
+    <input type="range" id="prix" min="49" max="399" step="10" value="149" oninput="calc()">
+  </div>
+
   <div class="verdict"><div class="tampon" id="tampon">
     <div class="gros" id="tamponGros">—</div>
-    <div class="petit" id="tamponPetit">service à 300&nbsp;€ / mois</div>
+    <div class="petit" id="tamponPetit">service à 149&nbsp;€ / mois</div>
   </div></div>
   <div class="phrase" id="phrase"></div>
 
   <footer>
-    Hypothèses volontairement prudentes&nbsp;: seule la moitié des clients ratés est comptée récupérée.
-    Service&nbsp;: réponse 24h/24 aux appels que vous ne pouvez pas prendre — installation et réglages faits pour vous, suivi local.
-    Conforme à la réglementation européenne&nbsp;: l'appelant est informé qu'il parle à un assistant.
+    Hypothèses volontairement prudentes&nbsp;: 1 dormant sur 10, la moitié des appels ratés seulement.
+    Service&nbsp;: campagnes de rappel personnalisées sur VOTRE fichier + rapport mensuel chiffré en euros — installation et réglages faits pour vous, suivi local.
+    Conforme à la réglementation&nbsp;: messages factuels, désinscription possible, données jamais revendues.
   </footer>
 </div>
 
@@ -178,14 +219,15 @@ const PRESETS = {
   autoecole:   {appels:6,  clients:4, ticket:1800, aide:"Un forfait permis B complet ≈ 1&nbsp;800&nbsp;€ (moyenne nationale)."},
   autre:       {appels:8,  clients:5, ticket:250,  aide:"Mettez votre panier moyen réel."}
 };
-const PRIX = 300;
-const eur = n => n.toLocaleString("fr-FR") + " €";
+const eur = n => n.toLocaleString("fr-FR") + " €";
+let modeActif = "C";
 
 function mode(m){
-  document.getElementById("modeA").classList.toggle("actif", m==="A");
-  document.getElementById("modeB").classList.toggle("actif", m==="B");
-  document.getElementById("tabA").setAttribute("aria-selected", m==="A");
-  document.getElementById("tabB").setAttribute("aria-selected", m==="B");
+  modeActif = m;
+  ["A","B","C"].forEach(x => {
+    document.getElementById("mode"+x).classList.toggle("actif", m===x);
+    document.getElementById("tab"+x).setAttribute("aria-selected", m===x);
+  });
   calc();
 }
 function preset(p, btn){
@@ -199,9 +241,28 @@ function preset(p, btn){
   calc();
 }
 function calc(){
-  const modeA = document.getElementById("modeA").classList.contains("actif");
-  let gainPrudent, phrase;
-  if (modeA){
+  const PRIX = +document.getElementById("prix").value;
+  document.getElementById("vPrix").textContent = eur(PRIX);
+  let gainMensuel, phrase;
+
+  if (modeActif === "C"){
+    const b = +document.getElementById("base").value;
+    const d = +document.getElementById("dormants").value;
+    const t = +document.getElementById("ticketC").value;
+    document.getElementById("vBase").textContent = b;
+    document.getElementById("vDormants").textContent = d;
+    document.getElementById("vTicketC").textContent = eur(t);
+    const nbDormants = b * d/10;
+    const retours = nbDormants * 0.10;
+    const gainAn = Math.round(retours * t);
+    gainMensuel = gainAn / 12;
+    document.getElementById("rDormants").textContent = nbDormants.toFixed(0);
+    document.getElementById("rRetours").textContent = retours.toFixed(0) + " clients";
+    document.getElementById("rGainC").textContent = eur(gainAn);
+    document.getElementById("rFourchetteC").textContent = "(jusqu'à " + eur(gainAn*2) + " si 2 sur 10 reviennent)";
+    const n = Math.max(1, Math.ceil(PRIX*12 / t));
+    phrase = "Il suffit de <strong>" + n + " client" + (n>1?"s":"") + " réveillé" + (n>1?"s":"") + " dans l'année</strong> pour rembourser le service. Tout le reste est du gain net — sans compter qu'un client revenu, ça re-revient.";
+  } else if (modeActif === "A"){
     const a = +document.getElementById("appels").value;
     const c = +document.getElementById("clients").value;
     const t = +document.getElementById("ticket").value;
@@ -210,9 +271,9 @@ function calc(){
     document.getElementById("vTicket").textContent = eur(t);
     const clientsMois = a * 4.3 * (c/10);
     const plein = clientsMois * t;
-    gainPrudent = Math.round(plein * 0.5);
+    gainMensuel = Math.round(plein * 0.5);
     document.getElementById("rClients").textContent = clientsMois.toFixed(0);
-    document.getElementById("rPerte").textContent = eur(gainPrudent);
+    document.getElementById("rPerte").textContent = eur(gainMensuel);
     document.getElementById("rFourchette").textContent = "(jusqu'à " + eur(Math.round(plein)) + " si tout était récupéré)";
     const n = Math.max(1, Math.ceil(PRIX / t));
     phrase = "Il suffit de <strong>" + n + " client" + (n>1?"s":"") + " récupéré" + (n>1?"s":"") + " par mois</strong> pour que le service soit remboursé. Le reste, c'est du gain net.";
@@ -221,20 +282,22 @@ function calc(){
     const ns = +document.getElementById("noshow").value;
     const v = +document.getElementById("creneau").value;
     document.getElementById("vRdv").textContent = r;
-    document.getElementById("vNoshow").textContent = ns + " %";
+    document.getElementById("vNoshow").textContent = ns + " %";
     document.getElementById("vCreneau").textContent = eur(v);
     const lapins = r * ns/100;
     const apres = r * Math.min(ns,5)/100;
     const recup = Math.max(0, lapins - apres);
-    gainPrudent = Math.round(recup * v);
+    gainMensuel = Math.round(recup * v);
     document.getElementById("rLapins").textContent = lapins.toFixed(0) + " (" + eur(Math.round(lapins*v)) + ")";
     document.getElementById("rApres").textContent = apres.toFixed(0);
-    document.getElementById("rGainB").textContent = recup.toFixed(0) + " → " + eur(gainPrudent);
-    phrase = "Et pendant ce temps, l'assistant filtre&nbsp;: <strong>les grosses réparations passent devant</strong>, les petites demandes attendent leur tour.";
+    document.getElementById("rGainB").textContent = recup.toFixed(0) + " → " + eur(gainMensuel);
+    phrase = "Et pendant ce temps, le système filtre&nbsp;: <strong>les grosses réparations passent devant</strong>, les petites demandes attendent leur tour.";
   }
-  const mult = gainPrudent / PRIX;
+
+  const mult = gainMensuel / PRIX;
   const tampon = document.getElementById("tampon");
   const gros = document.getElementById("tamponGros");
+  document.getElementById("tamponPetit").innerHTML = "service à " + eur(PRIX) + " / mois";
   if (mult >= 1){
     tampon.classList.remove("negatif");
     gros.textContent = "Remboursé × " + (mult >= 10 ? Math.round(mult) : mult.toFixed(1)).toString().replace(".", ",");
